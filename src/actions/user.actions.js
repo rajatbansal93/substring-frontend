@@ -7,7 +7,8 @@ export const userActions = {
   login,
   logout,
   register,
-  getAllCalculations
+  getAllCalculations,
+  deleteCal
 };
 
 function login(username, password) {
@@ -76,4 +77,22 @@ function getAllCalculations() {
   function request(user) { return { type: userConstants.GET_ALL_CALCULATION_REQUEST, user } }
   function success(calculations) { return { type: userConstants.GET_ALL_CALCULATION_SUCCESS, calculations } }
   function failure(error) { return { type: userConstants.GET_ALL_CALCULATION_FAILURE, error } }
+}
+
+function deleteCal(calculationId) {
+  return dispatch => {
+    let user = JSON.parse(localStorage.getItem('user'));
+    dispatch(request(user));
+    
+    userService.deleteCal(user, calculationId)
+    .then(
+      calculations => dispatch(success(calculations)),
+      error => dispatch(failure(error))
+    );
+
+  }
+
+  function request(user) { return { type: userConstants.DELETE_CAL_REQUEST, user } }
+  function success(calculations) { return { type: userConstants.DELETE_CAL_SUCCESS, calculations } }
+  function failure(error) { return { type: userConstants.DELETE_CAL_FAILURE, error } }
 }

@@ -9,6 +9,10 @@ class CalculationManager extends React.Component {
     this.props.getAll();
   }
 
+  handleDeleteCal(id) {
+    return (e) => this.props.deleteCal(id);
+  }
+
   render() {
     let calculations = [];
     if (this.props.calculations) {
@@ -40,7 +44,7 @@ class CalculationManager extends React.Component {
             <div className="col-md-2">{calculation.sub_string}</div>
             <div className="col-md-2">{calculation.result.toString()}</div>
             <div className="col-md-2">
-              <button className={[classes.deleteButton, 'btn-danger'].join(' ')}>X</button>
+              <button className={[classes.deleteButton, 'btn-danger'].join(' ')} onClick={this.handleDeleteCal(calculation.id)}>X</button>
             </div>
           </div>
         )}
@@ -54,7 +58,8 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  getAll: userActions.getAllCalculations
+  getAll: userActions.getAllCalculations,
+  deleteCal: userActions.deleteCal
 };
 
 export default connect(mapState, actionCreators)(CalculationManager);

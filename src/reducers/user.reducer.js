@@ -18,6 +18,19 @@ export function users(state = initialState, action) {
         ...initialState,
         calculations: action.calculations.calculations
       };
+    case userConstants.DELETE_CAL_REQUEST:
+      return {
+        loading: true
+      };
+    case userConstants.DELETE_CAL_FAILURE:
+      return { 
+        error: action.error
+      };
+    case userConstants.DELETE_CAL_SUCCESS:
+      return {
+        ...initialState,
+        calculations: action.calculations.calculations
+      };
     default:
       return state
   }

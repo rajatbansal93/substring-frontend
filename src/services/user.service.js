@@ -4,7 +4,8 @@ export const userService = {
   login,
   logout,
   register,
-  getAllCalculations
+  getAllCalculations,
+  deleteCal
 };
 
 function login(email, password) {
@@ -50,6 +51,16 @@ function getAllCalculations(user) {
     headers: authHeader()
   };
   return fetch(`http://localhost:5000/users/${user.data.id}/substring_calculations`, requestOptions).then(handleResponse);
+}
+
+
+function deleteCal(user, calculationId) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: authHeader()
+  };
+  const url = `http://localhost:5000/users/${user.data.id}/substring_calculations/${calculationId}`;
+  return fetch(url, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) { 
