@@ -1,11 +1,13 @@
 import { authHeader } from '../helpers';
+import { urlConstants, getAllCalUrl, deleteCalUrl, createCalUrl } from '../constants';
 
 export const userService = {
   login,
   logout,
   register,
   getAllCalculations,
-  deleteCal
+  deleteCal,
+  createCal
 };
 
 function login(email, password) {
@@ -15,8 +17,7 @@ function login(email, password) {
     body: JSON.stringify({ email, password })
   };
 
-
-  return fetch(`http://localhost:5000/auth/sign_in`, requestOptions)
+  return fetch(urlConstants.LOGIN, requestOptions)
     .then(handleResponse)
     .then(user => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -32,7 +33,7 @@ function logout() {
     headers: authHeader(),
     body: JSON.stringify({ email: JSON.parse(localStorage.getItem('user')).data.email })
   };
-  return fetch(`http://localhost:5000/auth/sign_out`, requestOptions).then(handleResponse);
+  return fetch(urlConstants.LOGOUT, requestOptions).then(handleResponse);
 }
 
 function register(user) {
@@ -41,7 +42,7 @@ function register(user) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user)
   };
-  return fetch(`http://localhost:5000/auth`, requestOptions).then(handleResponse);
+  return fetch(urlConstants.REGISTER, requestOptions).then(handleResponse);
 }
 
 
@@ -50,7 +51,8 @@ function getAllCalculations(user) {
     method: 'GET',
     headers: authHeader()
   };
-  return fetch(`http://localhost:5000/users/${user.data.id}/substring_calculations`, requestOptions).then(handleResponse);
+  
+  return fetch(getAllCalUrl(user.data.id), requestOptions).then(handleResponse);
 }
 
 
@@ -59,8 +61,17 @@ function deleteCal(user, calculationId) {
     method: 'DELETE',
     headers: authHeader()
   };
-  const url = `http://localhost:5000/users/${user.data.id}/substring_calculations/${calculationId}`;
-  return fetch(url, requestOptions).then(handleResponse);
+  return fetch(deleteCalUrl(user.data.id, calculationId), requestOptions).then(handleResponse);
+}
+
+
+function createCal(user, string) {
+  const requestOptions = {
+    method: 'POST',
+    headers: authHeader()
+  };
+  const calParams = `substring_calculations[main_string]=${string.base}&substring_calculations[sub_string]=${string.candidate}`
+  return fetch(createCalUrl(user.data.id, calParams), requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) { 
@@ -75,7 +86,6 @@ function handleResponse(response) {
 
   return response.text().then(text => {
     const data = text && JSON.parse(text);
-
     if (!response.ok) {
       if (response.status === 401) {
         logout();
