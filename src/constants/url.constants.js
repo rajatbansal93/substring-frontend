@@ -7,13 +7,13 @@ export const urlConstants = {
 }
 
 export const getAllCalUrl = (user_id) => {
-  return `http://localhost:5000/users/${user_id}/substring_calculations`
+  return `${BASE_URL}/users/${user_id}/substring_calculations`
 }
 
 export const deleteCalUrl = (user_id, cal_id) => {
-  return `http://localhost:5000/users/${user_id}/substring_calculations/${cal_id}`
+  return `${BASE_URL}/users/${user_id}/substring_calculations/${cal_id}`
 }
 
 export const createCalUrl = (user_id, params) => {
-  return `http://localhost:5000/users/${user_id}/substring_calculations?${params}`
+  return `${BASE_URL}/users/${user_id}/substring_calculations?${params}`
 }
