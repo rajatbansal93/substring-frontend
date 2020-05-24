@@ -3,7 +3,8 @@ import { authHeader } from '../helpers';
 export const userService = {
   login,
   logout,
-  register
+  register,
+  getAllCalculations
 };
 
 function login(email, password) {
@@ -34,12 +35,21 @@ function logout() {
 }
 
 function register(user) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-    return fetch(`http://localhost:5000/auth`, requestOptions).then(handleResponse);
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user)
+  };
+  return fetch(`http://localhost:5000/auth`, requestOptions).then(handleResponse);
+}
+
+
+function getAllCalculations(user) {
+  const requestOptions = {
+    method: 'GET',
+    headers: authHeader()
+  };
+  return fetch(`http://localhost:5000/users/${user.data.id}/substring_calculations`, requestOptions).then(handleResponse);
 }
 
 function handleResponse(response) { 
@@ -54,6 +64,7 @@ function handleResponse(response) {
 
   return response.text().then(text => {
     const data = text && JSON.parse(text);
+
     if (!response.ok) {
       if (response.status === 401) {
         logout();
